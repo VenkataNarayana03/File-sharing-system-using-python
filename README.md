@@ -54,4 +54,3 @@ An efficient file sharing system built with Python that allows users to upload, 
 ## Security Note
 - Always ensure the server is running in a secure, trusted network
 - Change default credentials before production use
-- Consider implementing SSL/TLS for production environments
