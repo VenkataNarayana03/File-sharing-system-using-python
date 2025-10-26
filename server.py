@@ -13,7 +13,7 @@ VALID_USERS = {
 # Segment 3: Client Handler
 def handle_client(client_socket, addr):
     print(f"[+] Connection from {addr}")
-
+    
     # Segment 3.1: Authentication
     client_socket.send(b"Username: ")
     username = client_socket.recv(1024).decode().strip()
@@ -39,7 +39,19 @@ def handle_client(client_socket, addr):
                 print(f"[-] {addr} disconnected.")
                 break
 
-            # Segment 3.3: File Upload
+            # Segment 3.3: List Files
+            elif command == "list":
+                try:
+                    files = [f for f in os.listdir('.') if os.path.isfile(f) and f != 'server.py']
+                    if not files:
+                        client_socket.send(b"No files available on the server.\n")
+                        continue
+                    file_list = "\n".join(f"- {file}" for file in files)
+                    client_socket.send(f"Available files:\n{file_list}\n".encode())
+                except Exception as e:
+                    client_socket.send(f"Error listing files: {str(e)}\n".encode())
+
+            # Segment 3.4: File Upload
             elif command == "upload":
                 filename = client_socket.recv(1024).decode().strip()
                 if not filename:
