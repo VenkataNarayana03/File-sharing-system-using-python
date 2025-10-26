@@ -26,13 +26,36 @@ def start_client():
             return
 
         while True:
-            user_input = input("Enter command (upload/download/exit): ").strip().lower()
+            print("\nAvailable commands:")
+            print("1. List files")
+            print("2. Upload a file")
+            print("3. Download a file")
+            print("4. Exit")
+            
+            choice = input("\nEnter your choice (1-4): ").strip()
+            
+            if choice == '1':
+                user_input = "list"
+            elif choice == '2':
+                user_input = "upload"
+            elif choice == '3':
+                user_input = "download"
+            elif choice == '4':
+                user_input = "exit"
+            else:
+                print("Invalid choice. Please try again.")
+                continue
+                
             client_socket.send(user_input.encode())
 
             if user_input == "exit":
                 print("Closing connection...")
                 break
 
+            elif user_input == "list":
+                file_list = client_socket.recv(4096).decode()
+                print("\n" + file_list)
+                
             elif user_input == "upload":
                 filename = input("Enter the filename to upload: ").strip()
                 if not os.path.exists(filename):
